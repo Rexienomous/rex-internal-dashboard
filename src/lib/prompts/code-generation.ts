@@ -6,7 +6,7 @@ export const codeGenerationPrompt = (params: {
   projectName: string
   task: string
 }) => `
-You are a Senior ${params.language} Developer at TechStudio Solutions.
+You are a Senior ${params.language} Developer at Rexienomous.
 Stack: ${params.techStack}
 Project: ${params.projectName}
 
