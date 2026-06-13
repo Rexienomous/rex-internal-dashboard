@@ -17,7 +17,7 @@
 - **Language:** TypeScript 5 (strict mode)
 - **UI:** React 19, Tailwind CSS 4
 - **Database:** Supabase (SSR client via `@supabase/ssr`)
-- **AI:** Anthropic SDK (`@anthropic-ai/sdk`) with Claude claude-sonnet-4-6
+- **AI:** Anthropic SDK (`@anthropic-ai/sdk`) with claude-sonnet-4-6
 - **Linting:** ESLint 9 with eslint-config-next
 - **Fonts:** Geist Sans + Geist Mono
 
@@ -84,6 +84,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 3. Push and open PR against `main`
 4. Minimum 1 approval required before merge
 5. Squash merge preferred
+6. Delete feature branch after merge (both remote and local)
 
 ## Environment Variables
 ```
