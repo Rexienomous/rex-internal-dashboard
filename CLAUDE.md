@@ -65,6 +65,8 @@ src/
       documentation.ts      # Documentation prompt template
     slack/
       webhook.ts            # Slack standup message parser
+.env.example                  # Environment variables template
+vercel.json                   # Vercel cron job configuration
 ```
 
 ## Completed Features
@@ -119,7 +121,9 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 ANTHROPIC_API_KEY=
+SLACK_WEBHOOK_URL=
 SLACK_SIGNING_SECRET=
+SLACK_WEBHOOK_SECRET=
 CRON_SECRET=
 ```
 
