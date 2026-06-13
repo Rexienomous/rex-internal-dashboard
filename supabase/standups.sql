@@ -18,6 +18,31 @@ create table standup_summaries (
   created_at timestamptz not null default now()
 );
 
--- Index for fetching standups by date
+-- Indexes
 create index idx_standups_date on standups (date);
 create index idx_standup_summaries_date on standup_summaries (date);
+
+-- Enable RLS
+alter table standups enable row level security;
+alter table standup_summaries enable row level security;
+
+-- RLS policies: authenticated users can read and insert
+create policy "Authenticated users can read standups"
+  on standups for select
+  to authenticated
+  using (true);
+
+create policy "Authenticated users can insert standups"
+  on standups for insert
+  to authenticated
+  with check (true);
+
+create policy "Authenticated users can read standup_summaries"
+  on standup_summaries for select
+  to authenticated
+  using (true);
+
+create policy "Authenticated users can insert standup_summaries"
+  on standup_summaries for insert
+  to authenticated
+  with check (true);
