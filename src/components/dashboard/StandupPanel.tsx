@@ -14,23 +14,6 @@ export default function StandupPanel() {
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  async function fetchSummary() {
-    try {
-      const res = await fetch('/api/ai/standup')
-      if (res.ok) {
-        const json = await res.json()
-        if (json.success) {
-          setData({ summary: json.summary, date: json.date })
-          setError(null)
-        }
-      }
-    } catch {
-      setError('Failed to load summary')
-    } finally {
-      setLoading(false)
-    }
-  }
-
   async function handleGenerate() {
     setGenerating(true)
     setError(null)
@@ -50,7 +33,25 @@ export default function StandupPanel() {
   }
 
   useEffect(() => {
-    fetchSummary()
+    let cancelled = false
+    const load = async () => {
+      try {
+        const res = await fetch('/api/ai/standup')
+        if (!cancelled && res.ok) {
+          const json = await res.json()
+          if (json.success) {
+            setData({ summary: json.summary, date: json.date })
+            setError(null)
+          }
+        }
+      } catch {
+        if (!cancelled) setError('Failed to load summary')
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+    load()
+    return () => { cancelled = true }
   }, [])
 
   return (
