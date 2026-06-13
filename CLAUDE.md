@@ -24,10 +24,14 @@
 ## Folder Structure
 ```
 src/
+  middleware.ts             # Auth middleware (protects /dashboard/*)
   app/
     layout.tsx              # Root layout (Geist fonts, dark mode)
     page.tsx                # Home page
     globals.css             # Global styles
+    login/
+      page.tsx              # Login page (email/password form)
+      actions.ts            # Server actions (signIn, signOut)
     dashboard/
       layout.tsx            # Dashboard layout (Sidebar + main area)
       page.tsx              # Dashboard page (metrics, reviews, standup)
@@ -60,6 +64,8 @@ src/
 - AI connection test endpoint (`GET /api/ai/test`)
 - Prompt library (code-review, code-generation, debug, documentation)
 - Dashboard UI with sidebar, metric cards, AI code reviews panel, AI standup summary
+- Supabase Authentication (email/password)
+- Protected /dashboard routes via middleware
 
 ## Design System
 - **Mode:** Dark mode primary
