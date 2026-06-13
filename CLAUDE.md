@@ -78,6 +78,7 @@ src/
 - Protected /dashboard routes via proxy
 - CI/CD GitHub Actions (type-check, lint, build)
 - AI Standup Summarizer (Slack webhook + manual trigger + auto cron)
+- Slack Slash Command /standup with format validation
 - Supabase standups + standup_summaries tables
 
 ## Design System
@@ -116,8 +117,9 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
 ANTHROPIC_API_KEY=
-SLACK_VERIFICATION_TOKEN=
+SLACK_SIGNING_SECRET=
 CRON_SECRET=
 ```
 

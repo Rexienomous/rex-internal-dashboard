@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
+import { createClient } from '@supabase/supabase-js'
 import { generateStandupSummary, type Standup } from '@/lib/ai/standup-summarizer'
 
 function createSupabaseAdmin() {
-  return createServerClient(
+  return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll: () => [], setAll: () => {} } }
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 }
 
