@@ -15,7 +15,7 @@
 ## Tech Stack
 - **Framework:** Next.js 16.2.9 (App Router)
 - **Language:** TypeScript 5 (strict mode)
-- **UI:** React 19, Tailwind CSS 4
+- **UI:** React 19, Tailwind CSS 4, Tabler Icons
 - **Database:** Supabase (SSR client via `@supabase/ssr`)
 - **AI:** Anthropic SDK (`@anthropic-ai/sdk`) with claude-sonnet-4-6
 - **Linting:** ESLint 9 with eslint-config-next
@@ -28,10 +28,16 @@ src/
     layout.tsx              # Root layout (Geist fonts, dark mode)
     page.tsx                # Home page
     globals.css             # Global styles
+    dashboard/
+      layout.tsx            # Dashboard layout (Sidebar + main area)
+      page.tsx              # Dashboard page (metrics, reviews, standup)
     api/
       ai/
         test/route.ts       # GET - Anthropic connection test
         code-review/route.ts # POST - AI code review endpoint
+  components/
+    dashboard/
+      Sidebar.tsx           # Sidebar nav with Tabler icons (client component)
   lib/
     ai/
       anthropic-client.ts   # Anthropic SDK wrapper (complete fn)
@@ -53,6 +59,7 @@ src/
 - AI code review bot (`POST /api/ai/code-review`)
 - AI connection test endpoint (`GET /api/ai/test`)
 - Prompt library (code-review, code-generation, debug, documentation)
+- Dashboard UI with sidebar, metric cards, AI code reviews panel, AI standup summary
 
 ## Design System
 - **Mode:** Dark mode primary
