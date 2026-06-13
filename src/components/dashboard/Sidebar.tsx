@@ -9,7 +9,9 @@ import {
   IconRobot,
   IconReport,
   IconSettings,
+  IconLogout,
 } from '@tabler/icons-react'
+import { signOut } from '@/app/login/actions'
 
 const mainNav = [
   { label: 'Dashboard', href: '/dashboard', icon: IconLayoutDashboard },
@@ -80,6 +82,18 @@ export default function Sidebar() {
           )
         })}
       </nav>
+
+      <div className="mt-auto px-3 pb-4">
+        <form action={signOut}>
+          <button
+            type="submit"
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-[#8892a4] transition-colors hover:bg-[#1e2035] hover:text-[#e2e8f0]"
+          >
+            <IconLogout size={18} stroke={1.5} />
+            Sign out
+          </button>
+        </form>
+      </div>
     </aside>
   )
 }
