@@ -1,4 +1,5 @@
 import { IconBell } from '@tabler/icons-react'
+import StandupPanel from '@/components/dashboard/StandupPanel'
 
 const metrics = [
   { label: 'PRs This Week', value: '12', change: '+3 from last week' },
@@ -13,25 +14,6 @@ const reviews = [
   { file: 'lib/db/queries.ts', score: 85, status: 'Approved' },
   { file: 'components/Table.tsx', score: 64, status: 'Needs Work' },
   { file: 'utils/format.ts', score: 95, status: 'Approved' },
-]
-
-const standupItems = [
-  {
-    member: 'Dev A',
-    summary: 'Completed dashboard sidebar and layout components.',
-  },
-  {
-    member: 'Dev B',
-    summary: 'Integrated Supabase auth with SSR cookie handling.',
-  },
-  {
-    member: 'Dev C',
-    summary: 'Added AI code review endpoint and prompt templates.',
-  },
-  {
-    member: 'Dev D',
-    summary: 'Set up CI pipeline and Vercel preview deployments.',
-  },
 ]
 
 function ScorePill({ score }: { score: number }) {
@@ -125,24 +107,7 @@ export default function DashboardPage() {
         </div>
 
         {/* AI Standup Summary */}
-        <div className="rounded-xl bg-[#151722] border border-[#2a2d3e] p-5">
-          <h2 className="text-base font-semibold text-[#e2e8f0] mb-4">
-            AI Standup Summary
-          </h2>
-          <div className="flex flex-col gap-3">
-            {standupItems.map((item) => (
-              <div
-                key={item.member}
-                className="rounded-lg bg-[#0f1117] px-4 py-3"
-              >
-                <p className="text-sm font-medium text-[#7f77dd]">
-                  {item.member}
-                </p>
-                <p className="mt-1 text-sm text-[#8892a4]">{item.summary}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <StandupPanel />
       </div>
     </div>
   )

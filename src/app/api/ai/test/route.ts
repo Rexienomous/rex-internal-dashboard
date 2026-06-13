@@ -16,7 +16,7 @@ export async function GET() {
       message: result.text,
       usage: result.usage,
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { success: false, error: 'API call failed' },
       { status: 500 }

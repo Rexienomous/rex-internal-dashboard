@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       success: true,
       review,
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { success: false, error: 'Code review failed' },
       { status: 500 }

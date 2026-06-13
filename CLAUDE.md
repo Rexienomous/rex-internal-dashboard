@@ -40,13 +40,20 @@ src/
       ai/
         test/route.ts       # GET - Anthropic connection test
         code-review/route.ts # POST - AI code review endpoint
+        standup/route.ts    # GET/POST - AI standup summary
+      slack/
+        standup/route.ts    # POST - Slack webhook for standups
+      cron/
+        standup/route.ts    # GET - Vercel cron auto-summarize
   components/
     dashboard/
       Sidebar.tsx           # Sidebar nav with Tabler icons (client component)
+      StandupPanel.tsx      # AI standup summary panel (client component)
   lib/
     ai/
       anthropic-client.ts   # Anthropic SDK wrapper (complete fn)
       code-reviewer.ts      # Code review logic, returns ReviewResult
+      standup-summarizer.ts # AI standup summary generator
     supabase/
       client.ts             # Browser Supabase client
       server.ts             # Server Supabase client (cookie-based)
@@ -56,6 +63,8 @@ src/
       code-generation.ts    # Code generation prompt template
       debug.ts              # Debug prompt template
       documentation.ts      # Documentation prompt template
+    slack/
+      webhook.ts            # Slack standup message parser
 ```
 
 ## Completed Features
@@ -68,6 +77,8 @@ src/
 - Supabase Authentication (email/password)
 - Protected /dashboard routes via proxy
 - CI/CD GitHub Actions (type-check, lint, build)
+- AI Standup Summarizer (Slack webhook + manual trigger + auto cron)
+- Supabase standups + standup_summaries tables
 
 ## Design System
 - **Mode:** Dark mode primary
@@ -106,6 +117,8 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ANTHROPIC_API_KEY=
+SLACK_VERIFICATION_TOKEN=
+CRON_SECRET=
 ```
 
 ## Important Notes
