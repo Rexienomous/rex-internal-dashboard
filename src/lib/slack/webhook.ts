@@ -6,7 +6,9 @@ export type SlackStandup = {
   ai_assist: string | null
 }
 
-export function parseSlackStandup(text: string, userName: string): SlackStandup {
+const REQUIRED_FIELDS = ['yesterday', 'today', 'blocker', 'ai_assist'] as const
+
+export function parseSlackStandup(text: string, userName: string): SlackStandup | null {
   const sections: Record<string, string> = {}
   const lines = text.split('\n')
   let currentKey = ''
@@ -30,11 +32,50 @@ export function parseSlackStandup(text: string, userName: string): SlackStandup 
     }
   }
 
+  for (const field of REQUIRED_FIELDS) {
+    if (!sections[field]?.trim()) return null
+  }
+
+  const toNullable = (val: string): string | null => {
+    const lower = val.trim().toLowerCase()
+    return lower === 'none' || lower === 'n/a' || lower === '-' ? null : val.trim()
+  }
+
   return {
     dev_name: userName,
-    yesterday: sections.yesterday || '',
-    today: sections.today || '',
-    blocker: sections.blocker || null,
-    ai_assist: sections.ai_assist || null,
+    yesterday: sections.yesterday.trim(),
+    today: sections.today.trim(),
+    blocker: toNullable(sections.blocker),
+    ai_assist: toNullable(sections.ai_assist),
   }
+}
+
+export async function verifySlackSignature(
+  signingSecret: string,
+  signature: string,
+  timestamp: string,
+  rawBody: string
+): Promise<boolean> {
+  const baseString = `v0:${timestamp}:${rawBody}`
+  const encoder = new TextEncoder()
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(signingSecret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  )
+  const sig = await crypto.subtle.sign('HMAC', key, encoder.encode(baseString))
+  const hex = Array.from(new Uint8Array(sig))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('')
+  const computed = `v0=${hex}`
+
+  // Timing-safe comparison
+  if (computed.length !== signature.length) return false
+  let mismatch = 0
+  for (let i = 0; i < computed.length; i++) {
+    mismatch |= computed.charCodeAt(i) ^ signature.charCodeAt(i)
+  }
+  return mismatch === 0
 }
