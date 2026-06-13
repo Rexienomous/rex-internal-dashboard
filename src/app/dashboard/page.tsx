@@ -1,20 +1,21 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import { IconBell } from '@tabler/icons-react'
 import StandupPanel from '@/components/dashboard/StandupPanel'
 
-const metrics = [
-  { label: 'PRs This Week', value: '12', change: '+3 from last week' },
-  { label: 'AI Reviews Done', value: '8', change: '67% of PRs' },
-  { label: 'Avg Code Score', value: '87', change: '+5 pts' },
-  { label: 'Blockers', value: '2', change: '1 critical' },
-]
+type Metric = {
+  label: string
+  value: string
+  change: string
+}
 
-const reviews = [
-  { file: 'auth/login.ts', score: 92, status: 'Approved' },
-  { file: 'api/users/route.ts', score: 78, status: 'Needs Work' },
-  { file: 'lib/db/queries.ts', score: 85, status: 'Approved' },
-  { file: 'components/Table.tsx', score: 64, status: 'Needs Work' },
-  { file: 'utils/format.ts', score: 95, status: 'Approved' },
-]
+type CodeReview = {
+  id: string
+  file_name: string
+  score: number
+  approved: boolean
+}
 
 function ScorePill({ score }: { score: number }) {
   const color =
@@ -31,14 +32,88 @@ function ScorePill({ score }: { score: number }) {
   )
 }
 
+function MetricSkeleton() {
+  return (
+    <div className="rounded-xl bg-[#151722] border border-[#2a2d3e] p-5 animate-pulse">
+      <div className="h-4 w-24 bg-[#2a2d3e] rounded" />
+      <div className="mt-3 h-8 w-16 bg-[#2a2d3e] rounded" />
+      <div className="mt-2 h-3 w-28 bg-[#2a2d3e] rounded" />
+    </div>
+  )
+}
+
+function ReviewSkeleton() {
+  return (
+    <div className="flex items-center justify-between rounded-lg bg-[#0f1117] px-4 py-3 animate-pulse">
+      <div className="h-4 w-36 bg-[#2a2d3e] rounded" />
+      <div className="flex items-center gap-3">
+        <div className="h-5 w-10 bg-[#2a2d3e] rounded-full" />
+        <div className="h-4 w-16 bg-[#2a2d3e] rounded" />
+      </div>
+    </div>
+  )
+}
+
 export default function DashboardPage() {
+  const [metrics, setMetrics] = useState<Metric[]>([])
+  const [reviews, setReviews] = useState<CodeReview[]>([])
+  const [metricsLoading, setMetricsLoading] = useState(true)
+  const [reviewsLoading, setReviewsLoading] = useState(true)
+  const [metricsError, setMetricsError] = useState<string | null>(null)
+  const [reviewsError, setReviewsError] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+
+    const loadMetrics = async () => {
+      try {
+        const res = await fetch('/api/dashboard/metrics')
+        if (!cancelled && res.ok) {
+          const json = await res.json()
+          if (json.success) setMetrics(json.metrics)
+          else setMetricsError('Failed to load metrics')
+        }
+      } catch {
+        if (!cancelled) setMetricsError('Failed to load metrics')
+      } finally {
+        if (!cancelled) setMetricsLoading(false)
+      }
+    }
+
+    const loadReviews = async () => {
+      try {
+        const res = await fetch('/api/dashboard/code-reviews')
+        if (!cancelled && res.ok) {
+          const json = await res.json()
+          if (json.success) setReviews(json.reviews)
+          else setReviewsError('Failed to load reviews')
+        }
+      } catch {
+        if (!cancelled) setReviewsError('Failed to load reviews')
+      } finally {
+        if (!cancelled) setReviewsLoading(false)
+      }
+    }
+
+    loadMetrics()
+    loadReviews()
+
+    return () => { cancelled = true }
+  }, [])
+
+  const today = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+
   return (
     <div className="p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-semibold text-[#e2e8f0]">Dashboard</h1>
-          <p className="text-sm text-[#8892a4] mt-1">June 13, 2026</p>
+          <p className="text-sm text-[#8892a4] mt-1">{today}</p>
         </div>
         <div className="flex items-center gap-4">
           <button className="relative p-2 rounded-lg text-[#8892a4] hover:bg-[#151722] transition-colors">
@@ -61,16 +136,29 @@ export default function DashboardPage() {
 
       {/* Metric Cards */}
       <div className="grid grid-cols-4 gap-4 mb-8">
-        {metrics.map((m) => (
-          <div
-            key={m.label}
-            className="rounded-xl bg-[#151722] border border-[#2a2d3e] p-5"
-          >
-            <p className="text-sm text-[#8892a4]">{m.label}</p>
-            <p className="mt-2 text-3xl font-bold text-[#e2e8f0]">{m.value}</p>
-            <p className="mt-1 text-xs text-[#8892a4]">{m.change}</p>
+        {metricsLoading ? (
+          <>
+            <MetricSkeleton />
+            <MetricSkeleton />
+            <MetricSkeleton />
+            <MetricSkeleton />
+          </>
+        ) : metricsError ? (
+          <div className="col-span-4 rounded-xl bg-[#151722] border border-[#2a2d3e] p-5 text-sm text-[#8892a4]">
+            {metricsError}
           </div>
-        ))}
+        ) : (
+          metrics.map((m) => (
+            <div
+              key={m.label}
+              className="rounded-xl bg-[#151722] border border-[#2a2d3e] p-5"
+            >
+              <p className="text-sm text-[#8892a4]">{m.label}</p>
+              <p className="mt-2 text-3xl font-bold text-[#e2e8f0]">{m.value}</p>
+              <p className="mt-1 text-xs text-[#8892a4]">{m.change}</p>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Two Column Grid */}
@@ -81,28 +169,44 @@ export default function DashboardPage() {
             AI Code Reviews
           </h2>
           <div className="flex flex-col gap-3">
-            {reviews.map((r) => (
-              <div
-                key={r.file}
-                className="flex items-center justify-between rounded-lg bg-[#0f1117] px-4 py-3"
-              >
-                <span className="text-sm text-[#e2e8f0] font-mono">
-                  {r.file}
-                </span>
-                <div className="flex items-center gap-3">
-                  <ScorePill score={r.score} />
-                  <span
-                    className={`text-xs font-medium ${
-                      r.status === 'Approved'
-                        ? 'text-emerald-400'
-                        : 'text-amber-400'
-                    }`}
-                  >
-                    {r.status}
-                  </span>
-                </div>
+            {reviewsLoading ? (
+              <>
+                <ReviewSkeleton />
+                <ReviewSkeleton />
+                <ReviewSkeleton />
+              </>
+            ) : reviewsError ? (
+              <div className="rounded-lg bg-[#0f1117] px-4 py-3 text-sm text-[#8892a4]">
+                {reviewsError}
               </div>
-            ))}
+            ) : reviews.length === 0 ? (
+              <div className="rounded-lg bg-[#0f1117] px-4 py-3 text-sm text-[#8892a4]">
+                No code reviews yet.
+              </div>
+            ) : (
+              reviews.map((r) => (
+                <div
+                  key={r.id}
+                  className="flex items-center justify-between rounded-lg bg-[#0f1117] px-4 py-3"
+                >
+                  <span className="text-sm text-[#e2e8f0] font-mono">
+                    {r.file_name}
+                  </span>
+                  <div className="flex items-center gap-3">
+                    <ScorePill score={r.score} />
+                    <span
+                      className={`text-xs font-medium ${
+                        r.approved
+                          ? 'text-emerald-400'
+                          : 'text-amber-400'
+                      }`}
+                    >
+                      {r.approved ? 'Approved' : 'Needs Work'}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

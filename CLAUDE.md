@@ -43,6 +43,9 @@ src/
         standup/route.ts    # GET/POST - AI standup summary
       slack/
         standup/route.ts    # POST - Slack webhook for standups
+      dashboard/
+        metrics/route.ts    # GET - Dashboard metric cards
+        code-reviews/route.ts # GET - Latest code reviews
       cron/
         standup/route.ts    # GET - Vercel cron auto-summarize
   components/
@@ -81,7 +84,8 @@ vercel.json                   # Vercel cron job configuration
 - CI/CD GitHub Actions (type-check, lint, build)
 - AI Standup Summarizer (Slack webhook + manual trigger + auto cron)
 - Slack Slash Command /standup with format validation
-- Supabase standups + standup_summaries tables
+- Supabase standups + standup_summaries + code_reviews tables
+- Dashboard connected to real data (GitHub API + Supabase)
 
 ## Design System
 - **Mode:** Dark mode primary
@@ -125,6 +129,7 @@ SLACK_WEBHOOK_URL=
 SLACK_SIGNING_SECRET=
 SLACK_WEBHOOK_SECRET=
 CRON_SECRET=
+GITHUB_TOKEN=
 ```
 
 ## Important Notes
