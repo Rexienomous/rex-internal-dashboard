@@ -13,19 +13,18 @@ export async function complete(params: {
   effort?: EffortLevel
   maxTokens?: number
 }) {
-  const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: params.maxTokens ?? 1000,
-    messages: [
-      {
-        role: 'user',
-        content: params.prompt,
-      },
-    ],
-  })
+  try {
+    const response = await anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: params.maxTokens ?? 1000,
+      messages: [
+        {
+          role: 'user',
+          content: params.prompt,
+        },
+      ],
+    })
 
-  // Handle Refusal (Fable 5 specific)
-  if (response.stop_reason === 'end_turn') {
     const content = response.content[0]
     if (content.type === 'text') {
       return {
@@ -34,12 +33,19 @@ export async function complete(params: {
         usage: response.usage,
       }
     }
-  }
 
-  return {
-    success: false,
-    text: null,
-    usage: response.usage,
+    return {
+      success: false,
+      text: null,
+      usage: response.usage,
+    }
+  } catch (error) {
+    console.error('Anthropic API Error:', error)
+    return {
+      success: false,
+      text: null,
+      usage: null,
+    }
   }
 }
 
