@@ -66,6 +66,7 @@ src/
 - Dashboard UI with sidebar, metric cards, AI code reviews panel, AI standup summary
 - Supabase Authentication (email/password)
 - Protected /dashboard routes via middleware
+- CI/CD GitHub Actions (type-check, lint, build)
 
 ## Design System
 - **Mode:** Dark mode primary
