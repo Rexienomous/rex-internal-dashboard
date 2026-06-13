@@ -84,6 +84,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 3. Push and open PR against `main`
 4. Minimum 1 approval required before merge
 5. Squash merge preferred
+6. Delete feature branch after merge (both remote and local)
 
 ## Environment Variables
 ```
