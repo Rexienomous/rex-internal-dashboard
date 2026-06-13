@@ -1,0 +1,13 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  notify:
+    name: Deploy Notification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment status
+        run: echo "Deploying to Vercel... (auto-deploy from main)"

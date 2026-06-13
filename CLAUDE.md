@@ -24,13 +24,14 @@
 ## Folder Structure
 ```
 src/
-  middleware.ts             # Auth middleware (protects /dashboard/*)
+  proxy.ts                  # Auth proxy (protects /dashboard/*)
   app/
     layout.tsx              # Root layout (Geist fonts, dark mode)
     page.tsx                # Home page
     globals.css             # Global styles
     login/
-      page.tsx              # Login page (email/password form)
+      page.tsx              # Login page (Suspense wrapper)
+      LoginForm.tsx          # Login form client component
       actions.ts            # Server actions (signIn, signOut)
     dashboard/
       layout.tsx            # Dashboard layout (Sidebar + main area)
@@ -65,7 +66,8 @@ src/
 - Prompt library (code-review, code-generation, debug, documentation)
 - Dashboard UI with sidebar, metric cards, AI code reviews panel, AI standup summary
 - Supabase Authentication (email/password)
-- Protected /dashboard routes via middleware
+- Protected /dashboard routes via proxy
+- CI/CD GitHub Actions (type-check, lint, build)
 
 ## Design System
 - **Mode:** Dark mode primary
