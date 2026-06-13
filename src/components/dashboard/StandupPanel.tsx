@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { IconSparkles, IconLoader2 } from '@tabler/icons-react'
+import ReactMarkdown from 'react-markdown'
 
 type SummaryData = {
   summary: string
@@ -92,8 +93,8 @@ export default function StandupPanel() {
       )}
 
       {!loading && data && (
-        <div className="rounded-lg bg-[#0f1117] px-4 py-3 text-sm text-[#e2e8f0] whitespace-pre-wrap leading-relaxed">
-          {data.summary}
+        <div className="rounded-lg bg-[#0f1117] px-4 py-3 text-sm text-[#e2e8f0] leading-relaxed prose prose-invert prose-sm max-w-none prose-headings:text-[#e2e8f0] prose-strong:text-[#e2e8f0] prose-li:text-[#e2e8f0] prose-p:text-[#e2e8f0] prose-table:text-[#e2e8f0] prose-th:text-[#8892a4] prose-td:text-[#e2e8f0]">
+          <ReactMarkdown>{data.summary}</ReactMarkdown>
         </div>
       )}
 
